@@ -1,6 +1,9 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { Pool } from "pg";
+import { Pool, QueryResultRow } from "pg";
+
+const DELIMITER = () => console.log("--------------------------------");
+const ROW = (params: string[]) => console.log(...params);
 
 const rejectUnauthorized = Boolean(process.env.rejectUnauthorized === "true");
 console.log("rejectUnauthorized", rejectUnauthorized);
@@ -15,25 +18,29 @@ const pool = new Pool({
   },
 });
 
-async function testConnection() {
-  console.log("test connection start");
+async function selectQuery<T extends QueryResultRow>(
+  query: string,
+  params?: any[]
+): Promise<T[] | undefined> {
   try {
     const client = await pool.connect();
-    const query = await client.query("SELECT * from accounts");
-    console.log(query.rows);
+    const response = await client.query<T>(query, params);
     client.release();
+    return response.rows;
   } catch (err) {
     console.error(err);
+    return undefined;
   }
-  console.log("test connection end");
 }
 
-// testConnection()
-//   .then((success) => {
-//     console.log("connection success");
-//   })
-//   .catch((err) => console.log(err));
-
 (async () => {
-  await testConnection();
+  const SQL = "select * from accounts";
+  const accounts = await selectQuery<{ id: string; name: string }>(SQL);
+  if (accounts) {
+    for (const account of accounts) {
+      DELIMITER();
+      ROW([account.id, account.name]);
+      DELIMITER();
+    }
+  }
 })();
