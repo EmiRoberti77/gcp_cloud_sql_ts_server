@@ -5,7 +5,8 @@
   "main": "dist/server.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/server.js",
+    "start:public": "cross-env ENV=public node dist/server.js",
+    "start:proxy": "cross-env ENV=proxy node dist/server.js",
     "build:start": "npm run build && npm run start",
     "tsnode": "ts-node src/server.ts"
   },
@@ -16,6 +17,7 @@
   "devDependencies": {
     "@types/node": "^22.13.1",
     "@types/pg": "^8.11.11",
+    "cross-env": "^7.0.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   },

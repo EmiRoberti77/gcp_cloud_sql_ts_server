@@ -1,7 +1,12 @@
 import dotenv from "dotenv";
-dotenv.config();
+import path from "path";
 import { Pool, QueryResultRow } from "pg";
-
+const env = process.env.ENV!;
+const envFile = env === "proxy" ? "../.env.proxy" : "../.env.public";
+dotenv.config({
+  path: path.resolve(__dirname, envFile),
+});
+console.log(envFile);
 const DELIMITER = () => console.log("--------------------------------");
 const ROW = (params: string[]) => console.log(...params);
 
