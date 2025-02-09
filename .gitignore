@@ -2,3 +2,5 @@ dist
 node_modules
 *.env.public
 *.env.proxy
+cloud-sql-proxy
+key.json

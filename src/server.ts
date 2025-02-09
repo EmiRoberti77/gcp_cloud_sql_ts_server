@@ -18,9 +18,12 @@ const pool = new Pool({
   password: process.env.password,
   database: process.env.database,
   port: parseInt(process.env.port!),
-  ssl: {
-    rejectUnauthorized,
-  },
+  ssl:
+    env === "proxy"
+      ? false
+      : {
+          rejectUnauthorized,
+        },
 });
 
 async function selectQuery<T extends QueryResultRow>(
